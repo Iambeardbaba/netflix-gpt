@@ -7,14 +7,10 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../Utils/firebase";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { addUser } from "../Utils/userSlice";
+import { USER_AVATAR } from "../Utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState("");
   const email = useRef(null);
   const password = useRef(null);
@@ -46,21 +42,14 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/82806859?v=4",
+            photoURL: USER_AVATAR,
           })
             .then(() => {
-              // Manually dispatch updated user data to Redux
-              const { uid, email, displayName, photoURL } = auth.currentUser;
-              dispatch(addUser({ 
-                uid: uid, 
-                email: email, 
-                displayName: displayName, 
-                photoURL: photoURL 
-              }));
-              navigate("/Browse");
+              // Profile updated successfully
+              // Navigation will be handled by Header's useEffect
             })
             .catch((error) => {
-              setErrorMessage(errorMessage);
+              setErrorMessage("Profile update failed");
             });
 
           // ...
@@ -83,22 +72,15 @@ const Login = () => {
           // Update profile with your photo even for existing users
           updateProfile(user, {
             photoURL: "https://avatars.githubusercontent.com/u/82806859?v=4",
-          }).then(() => {
-            // Manually dispatch updated user data to Redux
-            const { uid, email, displayName, photoURL } = auth.currentUser;
-            dispatch(addUser({ 
-              uid: uid, 
-              email: email, 
-              displayName: displayName, 
-              photoURL: photoURL 
-            }));
-            console.log(user);
-            navigate("/Browse");
-          }).catch((error) => {
-            console.log(user);
-            navigate("/Browse"); // Navigate even if profile update fails
-          });
-          // ...
+          })
+            .then(() => {
+              // Profile updated successfully
+              // Navigation will be handled by Header's useEffect
+            })
+            .catch((error) => {
+              // Continue even if profile update fails
+              // Navigation will be handled by Header's useEffect
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -114,12 +96,10 @@ const Login = () => {
 
   return (
     <div>
-      <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10">
-        <img
-          className="w-44"
-          src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production_2025-08-26/consent/87b6a5c0-0104-4e96-a291-092c11350111/0198e689-25fa-7d64-bb49-0f7e75f898d2/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
-          alt="Netflix_Logo"
-        />
+      <Header />
+      {/* Educational Disclaimer Banner */}
+      <div className="fixed top-0 w-full bg-yellow-500 text-black text-center py-2 z-30 font-bold">
+        🎓 EDUCATIONAL DEMO PROJECT - NOT AFFILIATED WITH NETFLIX
       </div>
       <div className="absolute w-screen h-screen -z-10">
         <img
