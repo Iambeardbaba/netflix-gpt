@@ -22,6 +22,17 @@
 - Register TMDB API & create an app & get access token
 - Get Data from TMDB now playing movies list API
 
+# NetflixGPT Structuring
+
+- Main Container
+
+  - Video in Background
+  - Video Title
+
+- Secondary Container
+  - Movie List \* n
+  - Cards \* n
+
 # Features
 
 - Login/Signup page
